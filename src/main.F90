@@ -1,5 +1,7 @@
 program Isaac
 
+   use iso_c_binding
+
    !use mpi
    use parameters
    use global
@@ -18,6 +20,17 @@ program Isaac
    use integrators
 
    implicit none
+
+   interface
+        subroutine start_viewer() bind(C)
+        end subroutine
+
+        subroutine draw_points(x, y, n) bind(C)
+            use iso_c_binding
+            real(C_DOUBLE), dimension(*), intent(in) :: x, y
+            integer(C_INT), intent(in) :: n
+        end subroutine
+    end interface
 
    interface
       subroutine stopFileHandler
@@ -60,6 +73,8 @@ program Isaac
    write (*,*) " OpenMP parallel version!"
    write (*,*) 
    write (*,*) "------------------------------------------------------------------"
+
+   call start_viewer()
 
 ! ##################################
 ! (A) LOAD THE INPUT DATA
@@ -225,6 +240,10 @@ program Isaac
       !$omp critical
          minimumCollisionTimeSqr = min(minimumCollisionTimeSqr, minimumCollisionTimeSqr_local)
       !$omp end critical
+      
+      !$omp master
+      call draw_points(body_x, body_y, nrOfBodies)
+      !$omp end master
 
       !$omp master
       t = t + dt

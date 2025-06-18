@@ -25,9 +25,9 @@ program Isaac
         subroutine start_viewer() bind(C)
         end subroutine
 
-        subroutine draw_points(x, y, n) bind(C)
+        subroutine draw_points(x, y, vx, vy, n) bind(C)
             use iso_c_binding
-            real(C_DOUBLE), dimension(*), intent(in) :: x, y
+            real(C_DOUBLE), dimension(*), intent(in) :: x, y, vx, vy
             integer(C_INT), intent(in) :: n
         end subroutine
     end interface
@@ -242,7 +242,7 @@ program Isaac
       !$omp end critical
       
       !$omp master
-      call draw_points(body_x, body_y, nrOfBodies)
+      call draw_points(body_x, body_y, body_vx, body_vy, nrOfBodies)
       !$omp end master
 
       !$omp master

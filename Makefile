@@ -58,8 +58,8 @@ MODULES = src/precision.F90        \
 
 # create the executable 
 Isaac: make_dirs $(OBJS)
-	gcc -fPIC -shared src/viewer.c -o libviewer.so -lglfw -lGL
-	$(COMPILER) $(CFLAGS) -o $(EXNAME) $(OBJS) -L. -lviewer -lGL -lglfw -Wl,-rpath=.
+	gcc -fPIC -shared src/viewer.c -o obj/libviewer.so -lglfw -lGL
+	$(COMPILER) $(CFLAGS) -o $(EXNAME) $(OBJS) -L./obj -lviewer -lGL -lglfw -Wl,-rpath=./obj
 
 # create a new executable 
 new: clean Isaac
